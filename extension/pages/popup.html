@@ -6,14 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <script src="./popup.js" type="module"></script>
-    <link rel="stylesheet" href="./popup.css" />
+    <link rel="stylesheet" href="../src/popup.css" />
   </head>
   <body>
-    <div class="popup-main"> 
+    <div id="main-popup" class="popup-main"  data-generate-page="false"> 
         <h1> Connoisseur </h1>
-        <button class="generate-btn"><span>START COOKING</span><span>GET PUBLIC OPINION</span></button>
-        <p> " Experiences' Best Shared " </p>
-    </div>
-      
+        <button id="generate-btn" class="generate-btn"><span>START COOKING</span><span>GET PUBLIC OPINION</span></button>
+        <p> " Experiences Best Shared " </p>
+
+        <div id="transition" data-generate-page="false"> </div>
+    </div>  
+    <script src="../popup.js"> </script>
   </body>
 </html>
