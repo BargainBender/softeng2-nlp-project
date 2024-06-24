@@ -16,7 +16,9 @@
 		"default_title": "Just observing your current url."
 		
 	},
-	"permissions": ["tabs", "activeTab", "http://127.0.0.1:8080/*", "storage",  "scripting"],
+	"permissions": ["tabs", "activeTab", 
+	"http://127.0.0.1:8080/*", "storage", 
+	"scripting"],
 	"background": {
 		"scripts": ["background.js"],
 		"persistent": false

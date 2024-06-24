@@ -1,0 +1,49 @@
+# Directories
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Dependency directories
+.cache/
+lib-cov/
+
+# Optional npm cache directory
+.npm
+
+# Environment variables file
+.env
+
+# Production build output
+build/
+dist/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+
+# macOS specific
+.DS_Store
+
+# Windows specific
+Thumbs.db
+
+# Yarn
+.yarn/
+.yarnrc
+.yarn-integrity
+
+# dotenv environment variables file
+.env
+
+# npm-debug.log
+npm-debug.log*
