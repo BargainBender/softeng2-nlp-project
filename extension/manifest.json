@@ -4,6 +4,7 @@
 	"description": "Review google reviews.",
 	"version": "0.1",
 	"author": "JABAT",
+	"content_security_policy": "script-src 'self' https://unpkg.com; object-src 'self';",
 	"host_permissions": ["<all_urls>"],
 	"browser_action": {
 		"default_popup": "pages/popup.html",

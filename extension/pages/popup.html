@@ -7,10 +7,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <script src="./popup.js" type="module"></script>
     <link rel="stylesheet" href="../src/popup.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+      #map {
+        height: 50%;
+        width: 100%;
+        background-color: #ff0000;
+        z-index: -50;
+      }
+    </style>
   </head>
   <body>
     <div id="main-popup" class="popup-main"  data-generate-page="false"> 
         <h1> Connoisseur </h1>
+        <div id="map"></div>
         <button id="generate-btn" class="generate-btn"><span>START COOKING</span><span>GET PUBLIC OPINION</span></button>
         <p> " Experiences Best Shared " </p>
         <div id="entrance"></div>
@@ -98,6 +108,9 @@
 
         </div>
     </div>  
+
+    
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js" defer></script>
     <script src="../popup.js"> </script>
   </body>
 </html>

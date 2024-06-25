@@ -13,6 +13,7 @@
 }
 
 .popup-main {
+  z-index: 1;
     background-image: url(./extension_bg.png);
     background-size: cover;
     background-repeat: no-repeat;
@@ -153,7 +154,7 @@
 
   /* COOL BUTTON STYLING */
   .generate-btn{
-    margin-top: 100px;
+    margin-top: 10px;
     color: #fff;
     border-radius: 5px;
     padding: 10px 25px;
@@ -227,6 +228,7 @@
     height: 110%;
     width: 101%;
     background-color: #CE1D1D;
+    z-index: 99;
   }
 
   #entrance {

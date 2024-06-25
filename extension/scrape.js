@@ -72,6 +72,8 @@ puppeteer.use(stealthPlugin());
                 });
             });
 
+
+
             let data =  await scrollPage(page,'.DxyBCb', ratings[0].total_reviews.replace(/[^0-9\.]+/g, "") / 2);
 
             console.log(data);

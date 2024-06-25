@@ -13,17 +13,27 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(cors({
-    origin: 'chrome-extension://inbcinkemfljjakbpkgecafigoogjdki'
+    origin: 'chrome-extension://odpjpahajlncojcdbmcdjndpnndkhbhg'
 }));
 
 // Endpoint to receive URL from fetch request
 app.post('/send_url', (req, res) => {
-    const url = req.body.url;
-    console.log('Received URL:', url);
+    const { url, placeName, long, lat } = req.body;
+    console.log('URL:', url);
+    console.log('Place Name:', placeName);
+    console.log('Longitude:', long);
+    console.log('Latitude:', lat);
     // Process the received URL as needed (e.g., scrape data)
-    storedUrl = url;
+    // storedUrl = url;
 
-    res.sendStatus(200); // Respond with success status
+    if (url != storedUrl){
+        storedUrl = url;
+    }
+
+
+    res.send(placeName); // Respond with success status
+
+    
 });
 
 // Endpoint to handle quitting URL
