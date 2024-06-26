@@ -1,114 +1,86 @@
-
-let getName = "";
-let getLat;
-let getLong;
-
-
-function handleMessage(message) {
-    console.log("handling message");
-    if (message.type === 'urlData') {
-        console.log('Received URL:', message.data.url);
-        console.log('Received Place Name:', message.data.name);
-        console.log('Received Longitude:', message.data.longtitude);
-        console.log('Received Latitude:', message.data.latitude);
-
-        // Example: Update DOM or perform actions based on received data
-        // Update your popup UI with the received data
-        getName = message.data.name;
-        getLat = message.data.latitude;
-        getLong = message.data.longtitude;
-    }
-}
-
-
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    console.log("Message received in popup:", message);
-    handleMessage(message);
-    
-});
-
+let data;
 
 document.addEventListener('DOMContentLoaded', async () => {
 
+    const button = document.getElementById('generate-btn');
+    const buttonBack = document.getElementById('backButton');
+    const mainPage = document.getElementById('transition');
 
-  const button = document.getElementById('generate-btn');
-  const buttonBack = document.getElementById('backButton');
-  const mainPage = document.getElementById('transition');
+    // Retrieve data from chrome.storage.local
+    chrome.storage.local.get(['siteData'], function(result) {
+        console.log('Value currently is:', result.siteData);
+        data = result.siteData;
 
-    
-  const map = L.map("map").setView([51.505, -0.09], 13);
+        // Check if data exists before initializing the map
+        if (data) {
+            initializeMapWithData(data.name, data.longtitude, data.latitude);
+        } else {
+            document.getElementById('generate-btn').style.display = 'none';
+            document.querySelector("#map").style.display = 'none';
+            document.querySelector("#no-map").style.display = 'block';
+            console.log('No data available to initialize map.');
+        }
+    });
 
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19,
-      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  }).addTo(map);
-  let marker = L.marker([51.505, -0.09]).addTo(map);
+   
 
+    function initializeMapWithData(placeName, long, lat) {
+        const map = L.map("map").setView([parseFloat(long), parseFloat(lat)], 14);
 
-    function updateMapWithData(placeName, long, lat) {
-        map.setView([parseFloat(lat), parseFloat(long)], 14);
-        marker = L.marker([parseFloat(lat), parseFloat(long)]).addTo(map);
-        marker.setLatLng([parseFloat(lat), parseFloat(long)]).bindPopup("<b>" + placeName + "</b>").openPopup();
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 19,
+        }).addTo(map);
+
+        let marker = L.marker([parseFloat(long), parseFloat(lat)]).addTo(map);
+        marker.bindPopup("<b>" + placeName + "</b>").openPopup();
     }
 
     
-    console.log(getName);
 
   
 
-  
-
-
-  if (button != null) {
+    if (button != null) {
         button.addEventListener('click', async () => {
-        mainPage.classList.add('animate-popup');
-        console.log("yo2");
+            mainPage.classList.add('animate-popup');
+            console.log("yo2");
 
+            mainPage.addEventListener('animationend', async () => {
+                console.log("yo");
+                try {
+                    const response = await fetch('http://localhost:8080/scrapeData', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ url: 'example.com' }) // Adjust with actual data if needed
+                    });
 
-        mainPage.addEventListener('animationend', async () => {
-            console.log("yo");
-            try {
-                const response = await fetch('http://localhost:8080/scrapeData', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ url: 'example.com' }) // Adjust with actual data if needed
-                });
-
-                if (response.ok) {
-                    console.log("Scraping completed successfully.");
-                    setTimeout(() => {
-                        window.location.href = 'generate.html'; // Navigate to generate.html after scraping
-                    }, 1000); // Delay to ensure animation completes
-                } else {
-                    throw new Error('Scraping process failed.');
+                    if (response.ok) {
+                        console.log("Scraping completed successfully.");
+                        setTimeout(() => {
+                            window.location.href = 'generate.html'; // Navigate to generate.html after scraping
+                        }, 1000); // Delay to ensure animation completes
+                    } else {
+                        throw new Error('Scraping process failed.');
+                    }
+                } catch (error) {
+                    console.error("Error occurred during scraping:", error);
                 }
-            } catch (error) {
-                console.error("Error occurred during scraping:", error);
-            }
-        }, { once: true });
-
-
+            }, { once: true });
         });
-    };
+    }
 
     if (buttonBack != null) {
         buttonBack.addEventListener('click', () => {
             mainPage.classList.add('animate-popup-back');
             console.log("Yo");
-       
+
             mainPage.addEventListener('animationend', async () => {
-               setTimeout(() => {
-                   window.location.href = 'popup.html'; 
-               }, 1000);
+                setTimeout(() => {
+                    window.location.href = 'popup.html';
+                }, 1000);
             });
-       
-         });
-        
-    };
-    
-   
-  
-    
+        });
+    }
+
 });

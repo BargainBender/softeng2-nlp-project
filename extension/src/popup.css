@@ -429,3 +429,11 @@
     color: #FFF455;
   }
 }
+
+
+
+#no-map {
+  display: none;
+  text-align: center;
+  color: #CE1D1D;
+}

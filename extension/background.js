@@ -58,14 +58,25 @@ function callExpressBackend(tab) {
         });
     } else {
         console.log('URL does not match the pattern. Skipping.');
+        chrome.storage.local.set({ siteData: null }, function() {
+            console.log('Data saved to chrome.storage.local:', null);
+            chrome.runtime.sendMessage({ type: 'urlData', data: null });
+        });
     }
 }
 
 
 function sendDataToPopup(data) {
     console.log("Calling Chrome", data);
-    chrome.runtime.sendMessage({ type: 'urlData', data: data });
+    chrome.storage.local.set({ siteData: data }, function() {
+        console.log('Data saved to chrome.storage.local:', data);
+        chrome.runtime.sendMessage({ type: 'urlData', data: data });
+    });
+
+    //localStorage.setItem('siteData', data);
+    //chrome.runtime.sendMessage({ type: 'urlData', data: localStorage.getItem('exampleKey') });
 }
+
 
 
 chrome.tabs.onActivated.addListener(function (activeInfo) {

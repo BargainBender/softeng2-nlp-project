@@ -5,7 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <script src="./popup.js" type="module"></script>
     <link rel="stylesheet" href="../src/popup.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
@@ -21,6 +20,9 @@
     <div id="main-popup" class="popup-main"  data-generate-page="false"> 
         <h1> Connoisseur </h1>
         <div id="map"></div>
+        <div id="no-map"> No Links Found - Try Going To The Review Page 
+          <img src="../src/missing.png" alt="missing link picture" style="max-width: 300px; max-height: 300px;">
+        </div>
         <button id="generate-btn" class="generate-btn"><span>START COOKING</span><span>GET PUBLIC OPINION</span></button>
         <p> " Experiences Best Shared " </p>
         <div id="entrance"></div>
