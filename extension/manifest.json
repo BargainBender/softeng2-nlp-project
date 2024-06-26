@@ -19,9 +19,12 @@
 	},
 	"permissions": ["tabs", "activeTab", 
 	"http://127.0.0.1:8080/*", "storage", 
-	"scripting"],
+	"scripting", "nativeMessaging"],
 	"background": {
 		"scripts": ["background.js"],
 		"persistent": false
-	}
+	},
+	"content_scripts": {
+		"js": ["popup.js"]
+    }
 }

@@ -5,8 +5,8 @@
 });*/
 /** ON ENTER */
 function callExpressBackend(tab) {
-    const mapsUrlPattern = /^https:\/\/www\.google\.com\/maps\/place\/([^\/]+)\/@([^,]+),([^,]+),[^\/]+\/data=!4m\d+!.*\?entry=ttu$/;
-
+    const mapsUrlPattern = /^https:\/\/www\.google\.com\/maps\/place\/([^\/]+)\/@([^,]+),([^,]+),[^\/]+\/data=!4m\d+!(?=.*!9m1!1b1!).*\?entry=ttu$/;
+ 
     const match = tab.url.match(mapsUrlPattern);
     let placeName = '';
     let long = '';
@@ -37,7 +37,18 @@ function callExpressBackend(tab) {
 
         }).then(response => {
             if (response.ok) {
-                console.log(response);
+                console.log( {
+                    url: tab.url,
+                    name: placeName,
+                    latitude: lat,
+                    longtitude: long
+                });
+                sendDataToPopup({
+                    url: tab.url,
+                    name: placeName,
+                    latitude: lat,
+                    longtitude: long
+                });
                 console.log('URL sent successfully.');
             } else {
                 console.error('Failed to send URL:', response.status, response.statusText);
@@ -50,6 +61,11 @@ function callExpressBackend(tab) {
     }
 }
 
+
+function sendDataToPopup(data) {
+    console.log("Calling Chrome", data);
+    chrome.runtime.sendMessage({ type: 'urlData', data: data });
+}
 
 
 chrome.tabs.onActivated.addListener(function (activeInfo) {

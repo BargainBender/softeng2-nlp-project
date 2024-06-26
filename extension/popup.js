@@ -1,43 +1,62 @@
+
+let getName = "";
+let getLat;
+let getLong;
+
+
 function handleMessage(message) {
+    console.log("handling message");
     if (message.type === 'urlData') {
-        const { url, placeName, long, lat } = message.data;
-        console.log('Received URL:', url);
-        console.log('Received Place Name:', placeName);
-        console.log('Received Longitude:', long);
-        console.log('Received Latitude:', lat);
+        console.log('Received URL:', message.data.url);
+        console.log('Received Place Name:', message.data.name);
+        console.log('Received Longitude:', message.data.longtitude);
+        console.log('Received Latitude:', message.data.latitude);
 
         // Example: Update DOM or perform actions based on received data
         // Update your popup UI with the received data
+        getName = message.data.name;
+        getLat = message.data.latitude;
+        getLong = message.data.longtitude;
     }
 }
 
 
-document.addEventListener('DOMContentLoaded', () => {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    console.log("Message received in popup:", message);
+    handleMessage(message);
+    
+});
+
+
+document.addEventListener('DOMContentLoaded', async () => {
+
+
   const button = document.getElementById('generate-btn');
   const buttonBack = document.getElementById('backButton');
   const mainPage = document.getElementById('transition');
 
-  chrome.runtime.getBackgroundPage(function(backgroundPage) {
-    console.log("RAYMOND");
-    // Access the backgroundPage object and listen for messages
-    backgroundPage.chrome.runtime.onMessage.addListener(handleMessage);
-});
     
-// Initialize map
-  var map = L.map("map").setView([14.6022881, 120.9620838], 14);
+  const map = L.map("map").setView([51.505, -0.09], 13);
 
-  //14.6022881,120.9620838,14
-  // Add tile layer (OpenStreetMap)
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution:
-      'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19,
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(map);
+  let marker = L.marker([51.505, -0.09]).addTo(map);
 
-  // Example marker
-  var marker = L.marker([14.6022881, 120.9620838]).addTo(map);
-  marker.bindPopup("<b>Jollibee</b><br>I am a popup.").openPopup();
 
+    function updateMapWithData(placeName, long, lat) {
+        map.setView([parseFloat(lat), parseFloat(long)], 14);
+        marker = L.marker([parseFloat(lat), parseFloat(long)]).addTo(map);
+        marker.setLatLng([parseFloat(lat), parseFloat(long)]).bindPopup("<b>" + placeName + "</b>").openPopup();
+    }
+
+    
+    console.log(getName);
+
+  
+
+  
 
 
   if (button != null) {

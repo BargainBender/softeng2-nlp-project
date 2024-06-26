@@ -8,12 +8,15 @@ const port = 8080;
 
 let storedUrl = ''
 
+
+let storedData;
+
 // Middleware to parse request bodies
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(cors({
-    origin: 'chrome-extension://odpjpahajlncojcdbmcdjndpnndkhbhg'
+    origin: 'chrome-extension://jhhlolconannaeolindgmlnbdefdagcc'
 }));
 
 // Endpoint to receive URL from fetch request
@@ -29,9 +32,25 @@ app.post('/send_url', (req, res) => {
     if (url != storedUrl){
         storedUrl = url;
     }
+    storedData = {
+        myURL: url,
+        name: placeName,
+        longitude: long,
+        latitude: lat
+    }
 
-
-    res.send(placeName); // Respond with success status
+    console.log(storedData);
+    // Send the response with the received data
+    //Some what obsolete, I didnt use the send
+    res.status(200).send({
+        message: 'Data received successfully',
+        data: {
+            url,
+            placeName,
+            longitude: long,
+            latitude: lat
+        }
+    });
 
     
 });
