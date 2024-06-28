@@ -38,7 +38,7 @@ puppeteer.use(stealthPlugin());
             items = await extractItems(page);
             await page.evaluate(`document.querySelector("${scrollContainer}").scrollTo(0, document.querySelector("${scrollContainer}").scrollHeight)`);
             await page.evaluate(`document.querySelector("${scrollContainer}").scrollHeight > ${previousHeight}`);
-            await page.waitForTimeout(2000);
+            await new Promise(r => setTimeout(r, 3000));            
         }
         return items;
     }
@@ -54,7 +54,7 @@ puppeteer.use(stealthPlugin());
             const [page] = await browser.pages();
 
             await page.goto(url, { waitUntil: "domcontentloaded" , timeout: 60000});
-            await page.waitForTimeout(9000);
+            await new Promise(r => setTimeout(r, 9000));
 
             let total = 0;
 
@@ -73,10 +73,12 @@ puppeteer.use(stealthPlugin());
             });
 
 
-
+            // NEED TO RETURN
             let data =  await scrollPage(page,'.DxyBCb', ratings[0].total_reviews.replace(/[^0-9\.]+/g, "") / 2);
+            jsonData = JSON.stringify(data);
 
-            console.log(data);
+
+            console.log(jsonData);
             await browser.close();
             
         } catch (e) {
