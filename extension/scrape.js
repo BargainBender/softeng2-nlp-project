@@ -29,16 +29,25 @@ puppeteer.use(stealthPlugin());
         return reviews;
     }
 
+
+    const clickButtons = async (page) => {
+        await page.$$eval('.w8nwRe.kyuRq', (buttons) => {
+          buttons.forEach((button) => button.click());
+        });
+    }
+
     const scrollPage = async(page, scrollContainer, itemTargetCount) => {
         let items = [];
         let previousHeight = await page.evaluate(`document.querySelector("${scrollContainer}").scrollHeight`);
 
         
         while (itemTargetCount > items.length) {
+            await clickButtons(page);
             items = await extractItems(page);
             await page.evaluate(`document.querySelector("${scrollContainer}").scrollTo(0, document.querySelector("${scrollContainer}").scrollHeight)`);
             await page.evaluate(`document.querySelector("${scrollContainer}").scrollHeight > ${previousHeight}`);
-            await new Promise(r => setTimeout(r, 3000));            
+            await new Promise(r => setTimeout(r, 3000)); 
+            await clickButtons(page);           
         }
         return items;
     }
