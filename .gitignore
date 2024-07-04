@@ -47,3 +47,8 @@ Thumbs.db
 
 # npm-debug.log
 npm-debug.log*
+
+server/venv
+server/__pycache__
+extension.crx
+extension.pem
