@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(cors({
-    origin: 'chrome-extension://odpjpahajlncojcdbmcdjndpnndkhbhg'
+    origin: 'chrome-extension://jhhlolconannaeolindgmlnbdefdagcc'
 }));
 
 // Endpoint to receive URL from fetch request

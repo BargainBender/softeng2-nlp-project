@@ -18,13 +18,24 @@
   </head>
   <body>
     <div id="main-popup" class="popup-main"  data-generate-page="false"> 
-        <h1> Connoisseur </h1>
+
+        <div id="title">
+          <h1> Connoisseur </h1>
+        </div>
         <div id="map"></div>
-        <div id="no-map"> No Links Found - Try Going To The Review Page 
-          <img src="../src/missing.png" alt="missing link picture" style="max-width: 300px; max-height: 300px;">
+        <div id="no-map"> 
+          <h1>OH NO!</h1> 
+          <h2>Looks like you're lost </h2>          
+         
+        
+          <img src="../src/x.png" alt="missing link picture" style="max-width: 300px; max-height: 300px;">
+        
+          <p>
+            The page you are currently on is not viable for review. Try going to google reviews, go back and try again
+          </p>
         </div>
         <button id="generate-btn" class="generate-btn"><span>START COOKING</span><span>GET PUBLIC OPINION</span></button>
-        <p> " Experiences Best Shared " </p>
+        <p id="footer"> " Experiences Best Shared " </p>
         <div id="entrance"></div>
         <div id="transition"  data-generate-page="false"> 
           

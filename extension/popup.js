@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('generate-btn').style.display = 'none';
             document.querySelector("#map").style.display = 'none';
             document.querySelector("#no-map").style.display = 'block';
+            document.querySelector("#title").style.textAlign ='left';
+            document.querySelector("#title h1").style.fontSize = '14px'
+            document.querySelector("#footer").style.display ='none';
             console.log('No data available to initialize map.');
         }
     });
