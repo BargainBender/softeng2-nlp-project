@@ -1,5 +1,7 @@
 const puppeteer = require('puppeteer-extra');
 const stealthPlugin = require('puppeteer-extra-plugin-stealth');
+const axios = require('axios');
+
 puppeteer.use(stealthPlugin());
 
 async function extractItems(page) {
@@ -89,10 +91,19 @@ const getMapsData = async (urlVar) => {
         let jsonData = JSON.stringify(data);
 
         console.log("Scrape.py Data: " + jsonData);
+
+        // Send the JSON data to the server
+        const response = await axios.post('http://localhost:5000/receive_json', { data });
+        console.log('Data sent to server:', response.data);
+
         await browser.close();
     } catch (e) {
         console.log(e);
     }
 };
+
+
+link = "https://www.google.com/maps/place/Dr.+Jose+Fabella+Memorial+Hospital-Tayuman/@14.6159823,120.9794886,18z/data=!4m18!1m9!3m8!1s0x3397b57d84242d25:0xc9cd75e0fff5cf3!2sJollibee!8m2!3d14.6166745!4d120.9825281!9m1!1b1!16s%2Fg%2F1tnphjhj!3m7!1s0x3397b509fb3d08ef:0xee6fbe746fa7deac!8m2!3d14.6164338!4d120.9806727!9m1!1b1!16s%2Fg%2F11sz2dxf8g?authuser=0&hl=en&entry=ttu";
+getMapsData(link);
 
 module.exports = getMapsData;

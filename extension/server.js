@@ -91,12 +91,12 @@ async function executeScraping(url) {
         try {
             const data = await scrapeFunction(url);
             console.log("Scraping completed successfully.");
-            console.log("Server.js Data: " + data);
-            const response = await axios.post('http://localhost:5000/receive_json', data);
+            // console.log("Server.js Data: " + data);
+            // const response = await axios.post('http://localhost:5000/receive_json', data);
 
 
             //test: Mock data for review items
-            
+
             // const reviewItems = [
             //     {
             //         user: { name: 'Romel Alcasabas', localGuide: true },
@@ -119,7 +119,7 @@ async function executeScraping(url) {
             //     null, null
             // ];
             // const response = await axios.post('http://localhost:5000/receive_json', reviewItems);
-            return { success: true, data: response.data};
+            // return { success: true, data: response.data};
         } catch (error) {
             console.error("Error occurred during scraping:", error);
             return { success: false, error: error.message};
