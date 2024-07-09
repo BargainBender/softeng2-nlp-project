@@ -88,7 +88,7 @@ const getMapsData = async (urlVar) => {
         let data = await scrollPage(page, '.DxyBCb', parseInt(ratings[0].total_reviews.replace(/[^0-9\.]+/g, ""), 10) / 2);
         let jsonData = JSON.stringify(data);
 
-        console.log(jsonData);
+        console.log("Scrape.py Data: " + jsonData);
         await browser.close();
     } catch (e) {
         console.log(e);

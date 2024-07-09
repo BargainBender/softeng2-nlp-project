@@ -20,6 +20,7 @@ lib-cov/
 
 # Environment variables file
 .env
+venv/
 
 # Production build output
 build/
@@ -54,3 +55,6 @@ extension.crx
 extension.pem
 
 models/sentiment_analyzer.model
+
+__pycache__
+extension/test.js

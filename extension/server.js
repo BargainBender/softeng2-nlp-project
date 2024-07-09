@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors'); 
 const scrapeFunction = require('./scrape.js');
+const axios = require('axios');
 
 const app = express();
 const port = 8080;
@@ -16,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(cors({
-    origin: 'chrome-extension://jhhlolconannaeolindgmlnbdefdagcc'
+    origin: 'chrome-extension://odpjpahajlncojcdbmcdjndpnndkhbhg'
 }));
 
 // Endpoint to receive URL from fetch request
@@ -90,7 +91,35 @@ async function executeScraping(url) {
         try {
             const data = await scrapeFunction(url);
             console.log("Scraping completed successfully.");
-            return { success: true, data: data};
+            console.log("Server.js Data: " + data);
+            const response = await axios.post('http://localhost:5000/receive_json', data);
+
+
+            //test: Mock data for review items
+            
+            // const reviewItems = [
+            //     {
+            //         user: { name: 'Romel Alcasabas', localGuide: true },
+            //         rating: '5 stars',
+            //         date: 'a year ago',
+            //         review: 'A newly build Dr. Fabella Hospital located at DOH compound.'
+            //     },
+            //     {
+            //         user: { name: 'Aljo Molina', localGuide: true },
+            //         rating: '5 stars',
+            //         date: 'a year ago',
+            //         review: 'Clean. Modern.'
+            //     },
+            //     {
+            //         user: { name: 'Johnny Ola', localGuide: true },
+            //         rating: '5 stars',
+            //         date: 'a year ago',
+            //         review: 'New and neat pang five star...'
+            //     },
+            //     null, null
+            // ];
+            // const response = await axios.post('http://localhost:5000/receive_json', reviewItems);
+            return { success: true, data: response.data};
         } catch (error) {
             console.error("Error occurred during scraping:", error);
             return { success: false, error: error.message};
@@ -102,15 +131,7 @@ async function executeScraping(url) {
     
 }
 
-
-
 // Start server
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
-
-
-
-
-
-
