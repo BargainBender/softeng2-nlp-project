@@ -52,3 +52,5 @@ server/venv
 server/__pycache__
 extension.crx
 extension.pem
+
+models/sentiment_analyzer.model
