@@ -27,8 +27,6 @@ app.post('/send_url', (req, res) => {
     console.log('Place Name:', placeName);
     console.log('Longitude:', long);
     console.log('Latitude:', lat);
-    // Process the received URL as needed (e.g., scrape data)
-    // storedUrl = url;
 
     if (url != storedUrl){
         storedUrl = url;
@@ -65,23 +63,20 @@ app.post('/quit_url', (req, res) => {
     res.sendStatus(200); // Respond with success status
 });
 
-
 app.post('/scrapeData', async (req, res) => {
-    // Simulate scraping data (replace with actual scraping logic)
-
     try {
-        let result = await executeScraping(storedUrl);
-        res.json(result);
-        
+        // Ensure storedUrl is not empty and execute scraping
+        if (storedUrl) {
+            let result = await executeScraping(storedUrl);
+            // console.log("Server.js Data: " + res.jsonData);
+            res.json({ success: true, data: result});
+        } else {
+            throw new Error("Invalid URL or no URL provided.");
+        }
     } catch (error) {
         console.error('Error during scraping:', error);
         res.status(500).json({ success: false, error: error.message });
     }
-
-    // Send JSON response back to client
-
-
-
 });
 
 
@@ -91,35 +86,10 @@ async function executeScraping(url) {
         try {
             const data = await scrapeFunction(url);
             console.log("Scraping completed successfully.");
-            // console.log("Server.js Data: " + data);
-            // const response = await axios.post('http://localhost:5000/receive_json', data);
+            console.log("Server.js Data: " + data);
 
-
-            //test: Mock data for review items
-
-            // const reviewItems = [
-            //     {
-            //         user: { name: 'Romel Alcasabas', localGuide: true },
-            //         rating: '5 stars',
-            //         date: 'a year ago',
-            //         review: 'A newly build Dr. Fabella Hospital located at DOH compound.'
-            //     },
-            //     {
-            //         user: { name: 'Aljo Molina', localGuide: true },
-            //         rating: '5 stars',
-            //         date: 'a year ago',
-            //         review: 'Clean. Modern.'
-            //     },
-            //     {
-            //         user: { name: 'Johnny Ola', localGuide: true },
-            //         rating: '5 stars',
-            //         date: 'a year ago',
-            //         review: 'New and neat pang five star...'
-            //     },
-            //     null, null
-            // ];
-            // const response = await axios.post('http://localhost:5000/receive_json', reviewItems);
-            // return { success: true, data: response.data};
+            const response = await axios.post('http://localhost:5000/receive_json', {data: data.data});
+            return { success: true, data: response};
         } catch (error) {
             console.error("Error occurred during scraping:", error);
             return { success: false, error: error.message};

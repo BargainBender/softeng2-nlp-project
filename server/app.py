@@ -28,7 +28,7 @@ def generate_summary(reviews: List[Union[ReviewItem, None]]):
 # This block is necessary to avoid the 'reload' warning
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("app:app", host="0.0.0.0", port=8080, reload=True)
+    uvicorn.run("app:app", host="0.0.0.0", port=5000, reload=True)
 
 
 #uvicorn app:app --reload --port 8080
