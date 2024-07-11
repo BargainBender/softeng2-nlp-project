@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(cors({
-    origin: 'chrome-extension://odpjpahajlncojcdbmcdjndpnndkhbhg'
+    origin: 'chrome-extension://hajepbhoboiknhghddcffdecdakbbghf'
 }));
 
 // Endpoint to receive URL from fetch request
@@ -88,8 +88,68 @@ async function executeScraping(url) {
             console.log("Scraping completed successfully.");
             console.log("Server.js Data: " + data);
 
-            const response = await axios.post('http://localhost:5000/receive_json', {data: data.data});
-            return { success: true, data: response};
+            const response = await axios.post('http://127.0.0.1:5000/receive_json', data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            console.log(response.data);
+            //console.log(JSON.stringify(response.data));
+
+            val_food_aspects = [];
+            val_unfiltered_aspects =[];
+            val_adjective_aspects = [];
+            val_food_sentiment = [];
+            val_adjective_sentiment = [];
+
+            if (Array.isArray(response.data.data)) {
+                // Iterate through each batch in response.data.data
+                response.data.data.forEach(batch => {
+                    //console.log(`\n\nBatch Number: ${batch.batch_number}`);
+            
+                    // Check if sentiment_results exist for this batch
+                    if (batch.sentiment_results) {
+                        // Push values into respective arrays
+                        if (batch.sentiment_results.unfiltered_aspects) {
+                            val_unfiltered_aspects.push(batch.sentiment_results.unfiltered_aspects);
+                        }
+                        if (batch.sentiment_results.food_aspects) {
+                            val_food_aspects.push(batch.sentiment_results.food_aspects);
+                        }
+                        if (batch.sentiment_results.adjective_aspects) {
+                            val_adjective_aspects.push(batch.sentiment_results.adjective_aspects);
+                        }
+                        if (batch.sentiment_results.food_sentiment) {
+                            val_food_sentiment.push(batch.sentiment_results.food_sentiment);
+                        }
+                        if (batch.sentiment_results.adjective_sentiment) {
+                            val_adjective_sentiment.push(batch.sentiment_results.adjective_sentiment);
+                        }
+                    } else {
+                        console.log(`No sentiment_results found for this batch.`);
+                    }
+
+                });
+
+
+            } else {
+                console.error('Response data.data is not an array:', response.data.data);
+                // Handle the unexpected response structure accordingly
+            }
+
+            
+            
+            const combinedData = {
+                val_food_aspects: val_food_aspects.flat(),
+                val_unfiltered_aspects: val_unfiltered_aspects.flat(),
+                val_adjective_aspects: val_adjective_aspects.flat(),
+                val_food_sentiment: val_food_sentiment.flat(),
+                val_adjective_sentiment: val_adjective_sentiment.flat()
+            };
+            console.log('Combined Data:', combinedData);
+
+            return { success: true, data: combinedData }; // Only return response.data
         } catch (error) {
             console.error("Error occurred during scraping:", error);
             return { success: false, error: error.message};

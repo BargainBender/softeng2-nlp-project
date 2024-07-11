@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     chrome.storage.local.get(['siteData'], function(result) {
         console.log('Value currently is:', result.siteData);
         data = result.siteData;
+        localStorage.setItem('siteDataFE', data.name);
 
         // Check if data exists before initializing the map
         if (data) {
@@ -23,6 +24,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.querySelector("#footer").style.display ='none';
             console.log('No data available to initialize map.');
         }
+
+       
     });
 
    
@@ -60,7 +63,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     if (response.ok) {
                         console.log("Scraping completed successfully.");
+                        const reviewsData = await response.json();
+
+                        localStorage.setItem('reviewsData', JSON.stringify(reviewsData));
+
+
+
                         setTimeout(() => {
+                            console.log(data);
                             window.location.href = 'generate.html'; // Navigate to generate.html after scraping
                         }, 1000); // Delay to ensure animation completes
                     } else {
@@ -85,5 +95,93 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         });
     }
+
+
+    const storedReviewsData = JSON.parse(localStorage.getItem('reviewsData'));
+    if (storedReviewsData) {
+
+
+        storedReviewsData.data.data.val_adjective_sentiment.sort((a, b) => {
+            if (a.confidence_score > b.confidence_score) return -1;
+            if (a.confidence_score < b.confidence_score) return 1;
+
+            if (a.final_sentiment === 'POSITIVE' && b.final_sentiment !== 'POSITIVE') return -1;
+            if (a.final_sentiment !== 'POSITIVE' && b.final_sentiment === 'POSITIVE') return 1;
+
+            return 0;  
+        });
+
+
+        //Check if sorted
+        storedReviewsData.data.data.val_adjective_sentiment.forEach(element => {
+            console.log(element);
+        });
+
+
+        //#region  WORD RATING
+        const wordRatingList = document.querySelector("#word-rating ul");
+
+        // Clear existing list items    
+        wordRatingList.innerHTML = '';
+
+        // Iterate over sorted data and append to list with different colors
+        storedReviewsData.data.data.val_adjective_sentiment.forEach((element, index) => {
+            const liElement = document.createElement('li');
+            liElement.textContent = element.aspect; // Example text, replace with your actual content
+            if (element.confidence_score >= 0.7) {
+                liElement.style.backgroundColor  = '#CE1D1D'; // High confidence
+            } else if (element.confidence_score >= 0.5) {
+                liElement.style.backgroundColor  = 'orange'; // Medium confidence
+            } else {
+                liElement.style.backgroundColor  = 'gray'; // Low confidence
+            }
+            wordRatingList.appendChild(liElement);
+        });
+
+        //#endregion
+
+        //#region Common Topics
+        const commonTopicsList = document.querySelector("#common-topics");
+
+        // Add the top 4 adjective aspects to the list
+        if (commonTopicsList) {
+            // Clear existing text content
+            commonTopicsList.innerHTML = "<span style='color: #CE1D1D;'>Common Topics:</span> ";
+    
+            // Add the top 4 adjective aspects to the text content
+            const topAspects = storedReviewsData.data.data.val_adjective_aspects.slice(0, 5).map(aspect => aspect[0]).join(', ');
+            commonTopicsList.textContent += topAspects;
+        } else {
+            console.log("Common Topics <li> element not found.");
+        }
+
+        //#endregion
+
+        const titleElement = document.querySelector("#resto-title");
+        if (JSON.stringify(localStorage.getItem('siteDataFE'))) {
+            let siteData = JSON.stringify(localStorage.getItem('siteDataFE'));
+            let cleanedName = (siteData.toString()).trim().replace(/\s+/g, ' ');
+            if (cleanedName.length > 23) {
+                cleanedName = cleanedName.substring(0, 20) + '...';
+            }
+            
+
+            
+            titleElement.textContent = cleanedName;
+            
+        } else {
+            console.log("No data.name available to set #resto-title.");
+        }
+    
+
+        console.log("Retrieved reviewsData:", storedReviewsData.data.data);
+
+
+
+        // Use the retrieved reviewsData as needed
+    } else {
+        console.log("No reviewsData stored in localStorage.");
+    }
+
 
 });

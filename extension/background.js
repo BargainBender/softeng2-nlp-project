@@ -5,7 +5,7 @@
 });*/
 /** ON ENTER */
 function callExpressBackend(tab) {
-    const mapsUrlPattern = /^https:\/\/www\.google\.com\/maps\/place\/([^\/]+)\/@([^,]+),([^,]+),[^\/]+\/data=!4m\d+!.*!9m1!1b1!.*\?authuser=\d+&hl=\w+&entry=ttu$/;
+    const mapsUrlPattern = /^https:\/\/www\.google\.com\/maps\/place\/([^\/]+)\/@([^,]+),([^,]+),[^\/]+\/data=!4m\d+!(?=.*!9m1!1b1!).*\?entry=ttu$/;
     const match = tab.url.match(mapsUrlPattern);
     let placeName = '';
     let long = '';
