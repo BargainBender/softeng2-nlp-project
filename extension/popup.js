@@ -10,7 +10,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     chrome.storage.local.get(['siteData'], function(result) {
         console.log('Value currently is:', result.siteData);
         data = result.siteData;
-        localStorage.setItem('siteDataFE', data.name);
+
+        if (data != null ) {
+            localStorage.setItem('siteDataFE', data.name);
+        }
 
         // Check if data exists before initializing the map
         if (data) {
@@ -125,18 +128,35 @@ document.addEventListener('DOMContentLoaded', async () => {
         wordRatingList.innerHTML = '';
 
         // Iterate over sorted data and append to list with different colors
+        // Initialize counters for each confidence level
+        let highCount = 0;
+        let mediumCount = 0;
+        let lowCount = 0;
+        let badCount = 0;
+
         storedReviewsData.data.data.val_adjective_sentiment.forEach((element, index) => {
             const liElement = document.createElement('li');
             liElement.textContent = element.aspect; // Example text, replace with your actual content
-            if (element.confidence_score >= 0.7) {
-                liElement.style.backgroundColor  = '#CE1D1D'; // High confidence
-            } else if (element.confidence_score >= 0.5) {
-                liElement.style.backgroundColor  = 'orange'; // Medium confidence
+
+            if (element.confidence_score >= 0.75 && highCount < 10) {
+                liElement.style.backgroundColor = '#C51605'; // High confidence
+                highCount++;
+            } else if (element.confidence_score >= 0.5 && mediumCount < 10) {
+                liElement.style.backgroundColor = '#FD8D14'; // Medium confidence
+                mediumCount++;
+            } else if (element.confidence_score >= 0.25 && lowCount < 10) {
+                liElement.style.backgroundColor = '#FFE17B'; // Low confidence
+                lowCount++;
+            } else if (element.confidence_score < 0.25 && element.confidence_score >= 0 && badCount < 10) {
+                liElement.style.backgroundColor = 'gray'; // Low confidence
+                badCount++;
             } else {
-                liElement.style.backgroundColor  = 'gray'; // Low confidence
+                return; // If all categories have reached 10, stop adding more items
             }
+
             wordRatingList.appendChild(liElement);
         });
+
 
         //#endregion
 
