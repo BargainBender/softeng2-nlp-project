@@ -11,12 +11,12 @@ from typing import List, Optional
 def process_reviews(reviews, batch_size):
     results = []
 
-    print("\n\n BATCHES")
+    #print("\n\n BATCHES")
     for i in range(0, len(reviews), batch_size):
         batch_reviews = reviews[i:i + batch_size]
 
-        print(f"Processing batch {i // batch_size + 1}")
-        print(batch_reviews)
+        #print(f"Processing batch {i // batch_size + 1}")
+        #print(batch_reviews)
 
         # Assuming analyze_sentiment returns structured results
         batch_results = analyze_sentiment(batch_reviews)
@@ -25,19 +25,19 @@ def process_reviews(reviews, batch_size):
             'sentiment_results': batch_results
         })
 
-        print(f"\nExtracted reviews: {batch_results}")
+        #print(f"\nExtracted reviews: {batch_results}")
 
-    print(f"\nSentiment analysis results:")
+    #print(f"\nSentiment analysis results:")
     for result in results:
         batch_number = result['batch_number']
         sentiment_results = result['sentiment_results']
 
-        print(f"Batch {batch_number}")
-        print("Sentiment Results:")
-        for key, value in sentiment_results.items():
-            print(f"- {key}: {value}")
+        #print(f"Batch {batch_number}")
+        #print("Sentiment Results:")
+        #for key, value in sentiment_results.items():
+        #    print(f"- {key}: {value}")
 
-        print("\n")
+        #print("\n")
 
     return results
 
@@ -49,7 +49,7 @@ BATCH_SIZE = 10
 def receive_json():
     try:
         data = request.get_json()
-        print(f"Received data: {data}")
+        #print(f"Received data: {data}")
 
 
         reviews = [item['review'] for item in data if item and 'review' in item]
@@ -59,7 +59,7 @@ def receive_json():
         
 
 
-        print(f"Sentiment analysis results: {results}")
+        #print(f"Sentiment analysis results: {results}")
 
 
         return jsonify({'message': 'JSON data received successfully', 'data': results}), 200

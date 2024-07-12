@@ -14,6 +14,10 @@ nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 nltk.download('wordnet')
 
+food_aspects = [ 'wings', 'pork', 'beef', 'food', 'chicken', 'plate', 'taste', 'sauce', 'tables', 'wing', 'bit', 'foods', 'porks', 'beefs', 'table', 'serving', 'leftovers', 'sauces']
+service_aspects = [ 'service', 'cashier', 'attentively', 'staff', 'listening', 'dazed', 'unattentive']
+atmosphere_aspects = [ 'place', 'atmosphere', 'overall', 'clean', 'infested', 'unsanitary', 'cockroach', 'restaurant']
+
 # Load the sentiment analyzer model
 with open('models/sentiment_analyzer.model', 'rb') as f:
     analyzer = pickle.load(f)
@@ -107,4 +111,44 @@ def analyze_sentiment(reviews):
         "adjective_sentiment": adjective_results
     }
 
+    food_sentiment_avg = aggregate_sentiment(food_results, food_aspects)
+    service_sentiment_avg = aggregate_sentiment(adjective_results, service_aspects)
+    atmosphere_sentiment_avg = aggregate_sentiment(adjective_results, atmosphere_aspects)
+
+    # Map average sentiment to star ratings
+    food_stars = sentiment_to_stars(food_sentiment_avg)
+    service_stars = sentiment_to_stars(service_sentiment_avg)
+    atmosphere_stars = sentiment_to_stars(atmosphere_sentiment_avg)
+
+    # Output star ratings
+    print(f"Food: {food_stars} stars")
+    print(f"Service: {service_stars} stars")
+    print(f"Atmosphere: {atmosphere_stars} stars")
+
     return results
+
+# Function to aggregate sentiment scores for specific categories
+def aggregate_sentiment(sentiment_data, category_aspects):
+    total_score = 0
+    count = 0
+    for item in sentiment_data:
+        if item['aspect'] in category_aspects:
+            total_score += item['confidence_score']
+            count += 1
+    return total_score / count if count > 0 else 0
+
+# Function to map sentiment score to star ratings
+def sentiment_to_stars(score):
+    if score >= 0.8:
+        return 5
+    elif score >= 0.6:
+        return 4
+    elif score >= 0.4:
+        return 3
+    elif score >= 0.2:
+        return 2
+    else:
+        return 1
+
+
+
