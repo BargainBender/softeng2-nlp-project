@@ -14,9 +14,23 @@ nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 nltk.download('wordnet')
 
-food_aspects = [ 'wings', 'pork', 'beef', 'food', 'chicken', 'plate', 'taste', 'sauce', 'tables', 'wing', 'bit', 'foods', 'porks', 'beefs', 'table', 'serving', 'leftovers', 'sauces']
-service_aspects = [ 'service', 'cashier', 'attentively', 'staff', 'listening', 'dazed', 'unattentive']
-atmosphere_aspects = [ 'place', 'atmosphere', 'overall', 'clean', 'infested', 'unsanitary', 'cockroach', 'restaurant']
+def create_array(path):
+    words = []
+    # Open the file in read mode
+    with open(path, 'r') as file:
+        # Read each line (which contains one word) and strip any extra whitespace
+        for line in file:
+            word = line.strip()
+            words.append(word)  # Add the word to the list
+    return words
+
+food_aspects = create_array('models/food.txt')
+service_aspects = create_array('models/service.txt')
+atmosphere_aspects = create_array('models/atmosphere.txt')
+
+# food_aspects = [ 'wings', 'pork', 'beef', 'food', 'chicken', 'plate', 'taste', 'sauce', 'tables', 'wing', 'bit', 'foods', 'porks', 'beefs', 'table', 'serving', 'leftovers', 'sauces']
+# service_aspects = [ 'service', 'cashier', 'attentively', 'staff', 'listening', 'dazed', 'unattentive']
+# atmosphere_aspects = [ 'place', 'atmosphere', 'overall', 'clean', 'infested', 'unsanitary', 'cockroach', 'restaurant']
 
 # Load the sentiment analyzer model
 with open('models/sentiment_analyzer.model', 'rb') as f:
@@ -103,14 +117,6 @@ def analyze_sentiment(reviews):
     food_results = analyzer.analyze_sentiment(reviews, food_aspects)
     adjective_results = analyzer.analyze_sentiment(reviews, adjective_aspects)
 
-    results = {
-        "unfiltered_aspects": sorted_aspects,
-        "food_aspects": sorted_food_aspects,
-        "adjective_aspects": sorted_adjective_aspects,
-        "food_sentiment": food_results,
-        "adjective_sentiment": adjective_results
-    }
-
     food_sentiment_avg = aggregate_sentiment(food_results, food_aspects)
     service_sentiment_avg = aggregate_sentiment(adjective_results, service_aspects)
     atmosphere_sentiment_avg = aggregate_sentiment(adjective_results, atmosphere_aspects)
@@ -120,10 +126,28 @@ def analyze_sentiment(reviews):
     service_stars = sentiment_to_stars(service_sentiment_avg)
     atmosphere_stars = sentiment_to_stars(atmosphere_sentiment_avg)
 
+    results = {
+        # general sentiment
+        "unfiltered_aspects": sorted_aspects,
+        "adjective_sentiment": adjective_results,
+        "adjective_aspects": sorted_adjective_aspects,
+
+        # absa
+        "food_sentiment": food_results,
+
+        "food_score": food_stars,
+        "service_score": service_stars,
+        "atmosphere_score": atmosphere_stars,
+        
+        # not used at the moment
+        # "food_aspects": sorted_food_aspects,
+    }
+
+
     # Output star ratings
-    print(f"Food: {food_stars} stars")
-    print(f"Service: {service_stars} stars")
-    print(f"Atmosphere: {atmosphere_stars} stars")
+    # print(f"Food: {food_stars} stars")
+    # print(f"Service: {service_stars} stars")
+    # print(f"Atmosphere: {atmosphere_stars} stars")
 
     return results
 

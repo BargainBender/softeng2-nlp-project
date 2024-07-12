@@ -97,15 +97,19 @@ async function executeScraping(url) {
             console.log(response.data);
             //console.log(JSON.stringify(response.data));
 
-            val_food_aspects = [];
-            val_unfiltered_aspects =[];
-            val_adjective_aspects = [];
-            val_food_sentiment = [];
-            val_adjective_sentiment = [];
+            let val_food_aspects = [];
+            let val_unfiltered_aspects =[];
+            let val_adjective_aspects = [];
+            let val_food_sentiment = [];
+            let val_adjective_sentiment = [];
+            let val_food_scores = [];
+            let val_service_scores = [];
+            let val_atmosphere_scores = [];
 
             if (Array.isArray(response.data.data)) {
                 // Iterate through each batch in response.data.data
                 response.data.data.forEach(batch => {
+                    console.log(batch)
                     //console.log(`\n\nBatch Number: ${batch.batch_number}`);
             
                     // Check if sentiment_results exist for this batch
@@ -126,6 +130,15 @@ async function executeScraping(url) {
                         if (batch.sentiment_results.adjective_sentiment) {
                             val_adjective_sentiment.push(batch.sentiment_results.adjective_sentiment);
                         }
+                        if (batch.sentiment_results.food_score) {
+                            val_food_scores.push(batch.sentiment_results.food_score);
+                        }
+                        if (batch.sentiment_results.service_score) {
+                            val_service_scores.push(batch.sentiment_results.service_score);
+                        }
+                        if (batch.sentiment_results.atmosphere_score) {
+                            val_atmosphere_scores.push(batch.sentiment_results.atmosphere_score);
+                        }
                     } else {
                         console.log(`No sentiment_results found for this batch.`);
                     }
@@ -138,14 +151,19 @@ async function executeScraping(url) {
                 // Handle the unexpected response structure accordingly
             }
 
-            
+            const val_food_scores_avg = getArrAvg(val_food_scores)
+            const val_service_scores_avg = getArrAvg(val_service_scores)
+            const val_atmosphere_scores_avg = getArrAvg(val_atmosphere_scores)
             
             const combinedData = {
                 val_food_aspects: val_food_aspects.flat(),
                 val_unfiltered_aspects: val_unfiltered_aspects.flat(),
                 val_adjective_aspects: val_adjective_aspects.flat(),
                 val_food_sentiment: val_food_sentiment.flat(),
-                val_adjective_sentiment: val_adjective_sentiment.flat()
+                val_adjective_sentiment: val_adjective_sentiment.flat(),
+                val_food_scores_avg,
+                val_service_scores_avg,
+                val_atmosphere_scores_avg
             };
             console.log('Combined Data:', combinedData);
 
@@ -158,7 +176,13 @@ async function executeScraping(url) {
         console.log("Invalid URL");
         return { success: false, error: error.message};
     }
-    
+}
+
+function getArrAvg(array) {
+    const sum = array.reduce((a, b) => a + b, 0)
+    const average = (sum / array.length) || 0
+
+    return average
 }
 
 // Start server

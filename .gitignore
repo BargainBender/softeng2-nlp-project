@@ -58,3 +58,6 @@ models/sentiment_analyzer.model
 
 __pycache__
 extension/test.js
+server/models/sentiment_analyzer.model
+server/__pycache__
+server/models/__pycache__

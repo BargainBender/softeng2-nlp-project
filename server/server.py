@@ -1,7 +1,7 @@
 import sys 
 import os
 sys.path.append(os.path.abspath("models"))
-from sentiment_analysis import analyze_sentiment
+from models.sentiment_analysis import analyze_sentiment
 
 
 from flask import Flask, request, jsonify

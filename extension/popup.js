@@ -157,6 +157,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             wordRatingList.appendChild(liElement);
         });
 
+        let foodScore = Math.round(storedReviewsData.data.data.val_food_scores_avg);
+        for (let i = 1; i <= foodScore; i++) {
+            document.getElementById(`food-star-${i}`).src = '../src/star-fill.png'
+        }
+        let serviceScore = Math.round(storedReviewsData.data.data.val_service_scores_avg);
+        for (let i = 1; i <= serviceScore; i++) {
+            document.getElementById(`service-star-${i}`).src = '../src/star-fill.png'
+        }
+        let atmosphereScore = Math.round(storedReviewsData.data.data.val_atmosphere_scores_avg);
+        for (let i = 1; i <= atmosphereScore; i++) {
+            document.getElementById(`atmosphere-star-${i}`).src = '../src/star-fill.png'
+        }
 
         //#endregion
 
